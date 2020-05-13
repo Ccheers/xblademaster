@@ -5,9 +5,9 @@ package xblademaster
 // license that can be found in the LICENSE file.
 
 import (
+	"github.com/Ccheers/xblademaster/binding"
 	"io"
 	"os"
-	"xblademaster/binding"
 )
 
 // EnvGinMode indicates environment name for gin mode.

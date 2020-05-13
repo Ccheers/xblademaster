@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/Ccheers/xblademaster/render"
 	"html/template"
 	"net"
 	"net/http"
@@ -13,7 +14,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-	"xblademaster/render"
 
 	"github.com/go-kratos/kratos/pkg/conf/dsn"
 	"github.com/go-kratos/kratos/pkg/log"
