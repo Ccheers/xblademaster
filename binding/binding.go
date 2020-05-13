@@ -1,8 +1,9 @@
 package binding
 
 import (
-    "net/http"
-    "strings"
+	"gopkg.in/go-playground/validator.v9"
+	"net/http"
+	"strings"
 )
 
 // MIME

@@ -1,8 +1,9 @@
 package binding
 
 import (
-    "reflect"
-    "sync"
+	"gopkg.in/go-playground/validator.v9"
+	"reflect"
+	"sync"
 )
 
 type defaultValidator struct {
