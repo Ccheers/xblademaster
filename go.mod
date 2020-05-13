@@ -1,4 +1,4 @@
-module xblademaster
+module github.com/Ccheers/xblademaster
 
 go 1.13
 
