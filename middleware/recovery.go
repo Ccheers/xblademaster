@@ -1,7 +1,8 @@
-package xblademaster
+package middleware
 
 import (
 	"fmt"
+	"github.com/Ccheers/xblademaster"
 	"net/http/httputil"
 	"os"
 	"runtime"
@@ -10,8 +11,8 @@ import (
 )
 
 // Recovery returns a middleware that recovers from any panics and writes a 500 if there was one.
-func Recovery() HandlerFunc {
-	return func(c *Context) {
+func Recovery() xblademaster.HandlerFunc {
+	return func(c *xblademaster.Context) {
 		defer func() {
 			var rawReq []byte
 			if err := recover(); err != nil {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/Ccheers/xblademaster/middleware"
 	"github.com/Ccheers/xblademaster/render"
 	"html/template"
 	"net"
@@ -226,13 +225,6 @@ func (engine *Engine) SetMethodConfig(path string, mc *MethodConfig) {
 	engine.pcLock.Lock()
 	engine.methodConfigs[path] = mc
 	engine.pcLock.Unlock()
-}
-
-// DefaultServer returns an Engine instance with the Recovery and Logger middleware already attached.
-func DefaultServer(conf *ServerConfig) *Engine {
-	engine := NewServer(conf)
-	engine.Use(Recovery(), middleware.Trace(), middleware.Logger())
-	return engine
 }
 
 func (engine *Engine) addRoute(method, path string, handlers ...HandlerFunc) {
