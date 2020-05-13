@@ -3,6 +3,7 @@ package xblademaster
 import (
 	"context"
 	"fmt"
+	"github.com/Ccheers/xblademaster/middleware"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -41,7 +42,7 @@ func setupHandler(engine *Engine) {
 		ctx.AbortWithStatus(200)
 	})
 
-	engine.GET("/criticality/api", Criticality(criticalityPkg.Critical), func(ctx *Context) {
+	engine.GET("/criticality/api", middleware.Criticality(criticalityPkg.Critical), func(ctx *Context) {
 		ctx.String(200, "%s", metadata.String(ctx, metadata.Criticality))
 	})
 	engine.GET("/criticality/none/api", func(ctx *Context) {

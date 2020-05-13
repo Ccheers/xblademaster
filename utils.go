@@ -3,6 +3,8 @@ package xblademaster
 import (
 	"os"
 	"path"
+	"reflect"
+	"runtime"
 )
 
 func lastChar(str string) uint8 {
@@ -156,4 +158,8 @@ func bufApp(buf *[]byte, s string, w int, c byte) {
 		copy(*buf, s[:w])
 	}
 	(*buf)[w] = c
+}
+
+func nameOfFunction(f interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
 }

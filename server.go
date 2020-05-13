@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/Ccheers/xblademaster/middleware"
 	"github.com/Ccheers/xblademaster/render"
 	"html/template"
 	"net"
@@ -230,7 +231,7 @@ func (engine *Engine) SetMethodConfig(path string, mc *MethodConfig) {
 // DefaultServer returns an Engine instance with the Recovery and Logger middleware already attached.
 func DefaultServer(conf *ServerConfig) *Engine {
 	engine := NewServer(conf)
-	engine.Use(Recovery(), Trace(), Logger())
+	engine.Use(Recovery(), middleware.Trace(), middleware.Logger())
 	return engine
 }
 

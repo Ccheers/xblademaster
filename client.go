@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"github.com/Ccheers/xblademaster/middleware"
 	"io"
 	"net"
 	xhttp "net/http"
@@ -79,7 +80,7 @@ func NewClient(c *ClientConfig) *Client {
 	}
 
 	// wraps RoundTripper for tracer
-	client.transport = &TraceTransport{RoundTripper: originTransport}
+	client.transport = &middleware.TraceTransport{RoundTripper: originTransport}
 	client.client = &xhttp.Client{
 		Transport: client.transport,
 	}

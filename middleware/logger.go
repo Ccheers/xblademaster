@@ -1,7 +1,8 @@
-package xblademaster
+package middleware
 
 import (
 	"fmt"
+	"github.com/Ccheers/xblademaster"
 	"strconv"
 	"time"
 
@@ -11,9 +12,9 @@ import (
 )
 
 // Logger is logger  middleware
-func Logger() HandlerFunc {
+func Logger() xblademaster.HandlerFunc {
 	const noUser = "no_user"
-	return func(c *Context) {
+	return func(c *xblademaster.Context) {
 		now := time.Now()
 		ip := metadata.String(c, metadata.RemoteIP)
 		req := c.Request
@@ -35,8 +36,8 @@ func Logger() HandlerFunc {
 		}
 
 		if len(c.RoutePath) > 0 {
-			_metricServerReqCodeTotal.Inc(c.RoutePath[1:], caller, req.Method, strconv.FormatInt(int64(cerr.Code()), 10))
-			_metricServerReqDur.Observe(int64(dt/time.Millisecond), c.RoutePath[1:], caller, req.Method)
+			xblademaster._metricServerReqCodeTotal.Inc(c.RoutePath[1:], caller, req.Method, strconv.FormatInt(int64(cerr.Code()), 10))
+			xblademaster._metricServerReqDur.Observe(int64(dt/time.Millisecond), c.RoutePath[1:], caller, req.Method)
 		}
 
 		lf := log.Infov

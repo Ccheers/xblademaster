@@ -1,7 +1,8 @@
-package xblademaster
+package middleware
 
 import (
 	"fmt"
+	"github.com/Ccheers/xblademaster"
 	"sync/atomic"
 	"time"
 
@@ -33,13 +34,13 @@ func (b *RateLimiter) printStats(routePath string, limiter limit.Limiter) {
 }
 
 // Limit return a bm handler func.
-func (b *RateLimiter) Limit() HandlerFunc {
-	return func(c *Context) {
+func (b *RateLimiter) Limit() xblademaster.HandlerFunc {
+	return func(c *xblademaster.Context) {
 		uri := fmt.Sprintf("%s://%s%s", c.Request.URL.Scheme, c.Request.Host, c.Request.URL.Path)
 		limiter := b.group.Get(uri)
 		done, err := limiter.Allow(c)
 		if err != nil {
-			_metricServerBBR.Inc(uri, c.Request.Method)
+			xblademaster._metricServerBBR.Inc(uri, c.Request.Method)
 			c.JSON(nil, err)
 			c.Abort()
 			return

@@ -1,6 +1,7 @@
-package xblademaster
+package middleware
 
 import (
+	"github.com/Ccheers/xblademaster"
 	"io"
 	"net/http"
 	"net/http/httptrace"
@@ -13,8 +14,8 @@ import (
 const _defaultComponentName = "net/http"
 
 // Trace is trace middleware
-func Trace() HandlerFunc {
-	return func(c *Context) {
+func Trace() xblademaster.HandlerFunc {
+	return func(c *xblademaster.Context) {
 		// handle http request
 		// get derived trace from http request header
 		t, err := trace.Extract(trace.HTTPFormat, c.Request.Header)

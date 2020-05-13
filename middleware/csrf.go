@@ -1,6 +1,7 @@
-package xblademaster
+package middleware
 
 import (
+	"github.com/Ccheers/xblademaster"
 	"net/url"
 	"regexp"
 	"strings"
@@ -22,7 +23,7 @@ func matchPattern(pattern *regexp.Regexp) func(*url.URL) bool {
 
 // CSRF returns the csrf middleware to prevent invalid cross site request.
 // Only referer is checked currently.
-func CSRF(allowHosts []string, allowPattern []string) HandlerFunc {
+func CSRF(allowHosts []string, allowPattern []string) xblademaster.HandlerFunc {
 	validations := []func(*url.URL) bool{}
 
 	addHostSuffix := func(suffix string) {
@@ -39,7 +40,7 @@ func CSRF(allowHosts []string, allowPattern []string) HandlerFunc {
 		addPattern(p)
 	}
 
-	return func(c *Context) {
+	return func(c *xblademaster.Context) {
 		referer := c.Request.Header.Get("Referer")
 		if referer == "" {
 			log.V(5).Info("The request's Referer or Origin header is empty.")
