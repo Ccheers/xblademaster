@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin/render"
 	"html/template"
 	"net"
 	"net/http"
@@ -14,6 +13,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+	"xblademaster/render"
 
 	"github.com/go-kratos/kratos/pkg/conf/dsn"
 	"github.com/go-kratos/kratos/pkg/log"
@@ -128,7 +128,7 @@ func (engine *Engine) Start() error {
 // Engine is the framework's instance, it contains the muxer, middleware and configuration settings.
 // Create an instance of Engine, by using New() or Default()
 type Engine struct {
-    RouterGroup
+	RouterGroup
 
 	lock sync.RWMutex
 	conf *ServerConfig
@@ -164,12 +164,12 @@ type Engine struct {
 	allNoMethod []HandlerFunc
 	noRoute     []HandlerFunc
 	noMethod    []HandlerFunc
-	
+
 	loadHtml   int
 	delims     render.Delims
 	FuncMap    template.FuncMap
 	HTMLRender render.HTMLRender
-	
+
 	// Value of 'maxMemory' param that is given to http.Request's ParseMultipartForm
 	// method call.
 	MaxMultipartMemory int64
@@ -544,19 +544,22 @@ func (engine *Engine) LoadHTMLGlob(pattern string) (err error) {
 	left := engine.delims.Left
 	right := engine.delims.Right
 	templ := template.Must(template.New("").Delims(left, right).Funcs(engine.FuncMap).ParseGlob(pattern))
-	
+
 	if IsDebugging() {
 		debugPrintLoadTemplate(templ)
 		engine.HTMLRender = render.HTMLDebug{Glob: pattern, FuncMap: engine.FuncMap, Delims: engine.delims}
 		return
 	}
-	
+
 	engine.SetHTMLTemplate(templ)
 	return
 }
 
 // SetHTMLTemplate associate a template with HTML renderer.
 func (engine *Engine) SetHTMLTemplate(templ *template.Template) {
+	if len(engine.trees) > 0 {
+		debugPrintWARNINGSetHTMLTemplate()
+	}
 	engine.HTMLRender = render.HTMLProduction{Template: templ.Funcs(engine.FuncMap)}
 }
 
