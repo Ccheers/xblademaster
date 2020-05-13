@@ -40,7 +40,7 @@ func (b *RateLimiter) Limit() xblademaster.HandlerFunc {
 		limiter := b.group.Get(uri)
 		done, err := limiter.Allow(c)
 		if err != nil {
-			xblademaster._metricServerBBR.Inc(uri, c.Request.Method)
+			xblademaster.MetricServerBBR.Inc(uri, c.Request.Method)
 			c.JSON(nil, err)
 			c.Abort()
 			return

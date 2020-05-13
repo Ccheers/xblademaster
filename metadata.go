@@ -17,14 +17,14 @@ import (
 
 const (
 	// http head
-	_httpHeaderUser         = "x1-bmspy-user"
-	_httpHeaderTimeout      = "x1-bmspy-timeout"
-	_httpHeaderRemoteIP     = "x-backend-bm-real-ip"
-	_httpHeaderRemoteIPPort = "x-backend-bm-real-ipport"
+	HttpHeaderUser         = "x1-bmspy-user"
+	HttpHeaderTimeout      = "x1-bmspy-timeout"
+	HttpHeaderRemoteIP     = "x-backend-bm-real-ip"
+	HttpHeaderRemoteIPPort = "x-backend-bm-real-ipport"
 )
 
 const (
-	_httpHeaderMetadata = "x-bm-metadata-"
+	HttpHeaderMetadata = "x-bm-metadata-"
 )
 
 var _parser = map[string]func(string) interface{}{
@@ -52,7 +52,7 @@ var _parser = map[string]func(string) interface{}{
 
 func parseMetadataTo(req *http.Request, to metadata.MD) {
 	for rawKey := range req.Header {
-		key := strings.ReplaceAll(strings.TrimPrefix(strings.ToLower(rawKey), _httpHeaderMetadata), "-", "_")
+		key := strings.ReplaceAll(strings.TrimPrefix(strings.ToLower(rawKey), HttpHeaderMetadata), "-", "_")
 		rawValue := req.Header.Get(rawKey)
 		var value interface{} = rawValue
 		parser, ok := _parser[key]
@@ -64,29 +64,29 @@ func parseMetadataTo(req *http.Request, to metadata.MD) {
 	return
 }
 
-func setMetadata(req *http.Request, key string, value interface{}) {
+func SetMetadata(req *http.Request, key string, value interface{}) {
 	strV, ok := value.(string)
 	if !ok {
 		return
 	}
-	header := fmt.Sprintf("%s%s", _httpHeaderMetadata, strings.ReplaceAll(key, "_", "-"))
+	header := fmt.Sprintf("%s%s", HttpHeaderMetadata, strings.ReplaceAll(key, "_", "-"))
 	req.Header.Set(header, strV)
 }
 
 // setCaller set caller into http request.
-func setCaller(req *http.Request) {
-	req.Header.Set(_httpHeaderUser, env.AppID)
+func SetCaller(req *http.Request) {
+	req.Header.Set(HttpHeaderUser, env.AppID)
 }
 
 // setTimeout set timeout into http request.
-func setTimeout(req *http.Request, timeout time.Duration) {
+func SetTimeout(req *http.Request, timeout time.Duration) {
 	td := int64(timeout / time.Millisecond)
-	req.Header.Set(_httpHeaderTimeout, strconv.FormatInt(td, 10))
+	req.Header.Set(HttpHeaderTimeout, strconv.FormatInt(td, 10))
 }
 
 // timeout get timeout from http request.
 func timeout(req *http.Request) time.Duration {
-	to := req.Header.Get(_httpHeaderTimeout)
+	to := req.Header.Get(HttpHeaderTimeout)
 	timeout, err := strconv.ParseInt(to, 10, 64)
 	if err == nil && timeout > 20 {
 		timeout -= 20 // reduce 20ms every time.
@@ -98,7 +98,7 @@ func timeout(req *http.Request) time.Duration {
 // x-backend-bm-real-ip or X-Real-IP or X-Forwarded-For in order to work properly with reverse-proxies such us: nginx or haproxy.
 // Use X-Forwarded-For before X-Real-Ip as nginx uses X-Real-Ip with the proxy's IP.
 func remoteIP(req *http.Request) (remote string) {
-	if remote = req.Header.Get(_httpHeaderRemoteIP); remote != "" && remote != "null" {
+	if remote = req.Header.Get(HttpHeaderRemoteIP); remote != "" && remote != "null" {
 		return
 	}
 	var xff = req.Header.Get("X-Forwarded-For")
@@ -115,7 +115,7 @@ func remoteIP(req *http.Request) (remote string) {
 }
 
 func remotePort(req *http.Request) (port string) {
-	if port = req.Header.Get(_httpHeaderRemoteIPPort); port != "" && port != "null" {
+	if port = req.Header.Get(HttpHeaderRemoteIPPort); port != "" && port != "null" {
 		return
 	}
 	return

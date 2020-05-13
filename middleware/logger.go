@@ -36,8 +36,8 @@ func Logger() xblademaster.HandlerFunc {
 		}
 
 		if len(c.RoutePath) > 0 {
-			xblademaster._metricServerReqCodeTotal.Inc(c.RoutePath[1:], caller, req.Method, strconv.FormatInt(int64(cerr.Code()), 10))
-			xblademaster._metricServerReqDur.Observe(int64(dt/time.Millisecond), c.RoutePath[1:], caller, req.Method)
+			xblademaster.MetricServerReqCodeTotal.Inc(c.RoutePath[1:], caller, req.Method, strconv.FormatInt(int64(cerr.Code()), 10))
+			xblademaster.MetricServerReqDur.Observe(int64(dt/time.Millisecond), c.RoutePath[1:], caller, req.Method)
 		}
 
 		lf := log.Infov

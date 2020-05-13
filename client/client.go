@@ -1,4 +1,4 @@
-package xblademaster
+package client
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"github.com/Ccheers/xblademaster"
 	"github.com/Ccheers/xblademaster/middleware"
 	"io"
 	"net"
@@ -153,7 +154,7 @@ func (client *Client) NewRequest(method, uri, realIP string, params url.Values) 
 		req.Header.Set(_contentType, _urlencoded)
 	}
 	if realIP != "" {
-		req.Header.Set(_httpHeaderRemoteIP, realIP)
+		req.Header.Set(xblademaster.HttpHeaderRemoteIP, realIP)
 	}
 	req.Header.Set(_userAgent, _noKickUserAgent+" "+env.AppID)
 	return
@@ -214,16 +215,16 @@ func (client *Client) Raw(c context.Context, req *xhttp.Request, v ...string) (b
 	brk := client.breaker.Get(uri)
 	if err = brk.Allow(); err != nil {
 		code = "breaker"
-		_metricClientReqCodeTotal.Inc(uri, req.Method, code)
+		xblademaster.MetricClientReqCodeTotal.Inc(uri, req.Method, code)
 		return
 	}
 	defer client.onBreaker(brk, &err)
 	// stat
 	now := time.Now()
 	defer func() {
-		_metricClientReqDur.Observe(int64(time.Since(now)/time.Millisecond), uri, req.Method)
+		xblademaster.MetricClientReqDur.Observe(int64(time.Since(now)/time.Millisecond), uri, req.Method)
 		if code != "" {
-			_metricClientReqCodeTotal.Inc(uri, req.Method, code)
+			xblademaster.MetricClientReqCodeTotal.Inc(uri, req.Method, code)
 		}
 	}()
 	// get config
@@ -249,12 +250,12 @@ func (client *Client) Raw(c context.Context, req *xhttp.Request, v ...string) (b
 		c, cancel = context.WithTimeout(c, timeout)
 		defer cancel()
 	}
-	setTimeout(req, timeout)
+	xblademaster.SetTimeout(req, timeout)
 	req = req.WithContext(c)
-	setCaller(req)
+	xblademaster.SetCaller(req)
 	metadata.Range(c,
 		func(key string, value interface{}) {
-			setMetadata(req, key, value)
+			xblademaster.SetMetadata(req, key, value)
 		},
 		metadata.IsOutgoingKey)
 	if resp, err = client.client.Do(req); err != nil {

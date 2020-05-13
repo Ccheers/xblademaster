@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Ccheers/xblademaster/middleware"
+	"github.com/Ccheers/xblademaster/serve"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -51,7 +52,7 @@ func setupHandler(engine *Engine) {
 }
 
 func startServer(addr string) {
-	e := DefaultServer(nil)
+	e := serve.DefaultServer(nil)
 	setupHandler(e)
 	go e.Run(addr)
 	curEngine.Store(e)

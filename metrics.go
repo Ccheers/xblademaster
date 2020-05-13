@@ -8,7 +8,7 @@ const (
 )
 
 var (
-	_metricServerReqDur = metric.NewHistogramVec(&metric.HistogramVecOpts{
+	MetricServerReqDur = metric.NewHistogramVec(&metric.HistogramVecOpts{
 		Namespace: serverNamespace,
 		Subsystem: "requests",
 		Name:      "duration_ms",
@@ -16,21 +16,21 @@ var (
 		Labels:    []string{"path", "caller", "method"},
 		Buckets:   []float64{5, 10, 25, 50, 100, 250, 500, 1000},
 	})
-	_metricServerReqCodeTotal = metric.NewCounterVec(&metric.CounterVecOpts{
+	MetricServerReqCodeTotal = metric.NewCounterVec(&metric.CounterVecOpts{
 		Namespace: serverNamespace,
 		Subsystem: "requests",
 		Name:      "code_total",
 		Help:      "http server requests error count.",
 		Labels:    []string{"path", "caller", "method", "code"},
 	})
-	_metricServerBBR = metric.NewCounterVec(&metric.CounterVecOpts{
+	MetricServerBBR = metric.NewCounterVec(&metric.CounterVecOpts{
 		Namespace: serverNamespace,
 		Subsystem: "",
 		Name:      "bbr_total",
 		Help:      "http server bbr total.",
 		Labels:    []string{"url", "method"},
 	})
-	_metricClientReqDur = metric.NewHistogramVec(&metric.HistogramVecOpts{
+	MetricClientReqDur = metric.NewHistogramVec(&metric.HistogramVecOpts{
 		Namespace: clientNamespace,
 		Subsystem: "requests",
 		Name:      "duration_ms",
@@ -38,7 +38,7 @@ var (
 		Labels:    []string{"path", "method"},
 		Buckets:   []float64{5, 10, 25, 50, 100, 250, 500, 1000},
 	})
-	_metricClientReqCodeTotal = metric.NewCounterVec(&metric.CounterVecOpts{
+	MetricClientReqCodeTotal = metric.NewCounterVec(&metric.CounterVecOpts{
 		Namespace: clientNamespace,
 		Subsystem: "requests",
 		Name:      "code_total",
